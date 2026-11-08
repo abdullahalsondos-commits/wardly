@@ -26,7 +26,7 @@ npx serve .
 ```
 
 ## Deploy
-Static site — no build step. Import the GitHub repo into Vercel with Framework Preset **Other**.
+Static site — no build step. Files: `index.html` (page), `style.css` (all styles and animations), `app.js` (app logic). Import the GitHub repo into Vercel with Framework Preset **Other**.
 
 ## Team
 Yassin Mohamed · Kareem Ahmed · Mazen Osama Fathy — Supervisor: Dr. Mona Saad Khalil Morgan

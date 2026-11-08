@@ -72,8 +72,7 @@ a{color:var(--info)}
 .nav{display:flex;flex-direction:column;gap:2px}
 .nav button{all:unset;cursor:pointer;display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:8px;color:var(--nav-ink);font-weight:500;position:relative}
 .nav button:hover{background:var(--nav-hover);color:var(--nav-hi)}
-.nav button.on{background:rgba(255,255,255,.1);color:var(--nav-hi)}
-.nav button.on::before{content:"";position:absolute;inset-inline-start:-12px;top:8px;bottom:8px;width:3px;border-radius:3px;background:#22C55E}
+.nav button.on{color:var(--nav-hi)}
 .nav .badge{margin-inline-start:auto}
 .nav-label{font-size:11px;text-transform:uppercase;letter-spacing:.08em;padding:0 10px;color:var(--nav-ink);opacity:.7}
 .who{margin-top:auto;border-top:1px solid rgba(255,255,255,.08);padding:14px 8px 0;display:flex;gap:10px;align-items:center}
@@ -84,13 +83,13 @@ a{color:var(--info)}
 .top{display:flex;align-items:center;gap:10px;padding:12px 24px;border-bottom:1px solid var(--line);background:var(--surface);flex-wrap:wrap}
 .top .grow{flex:1}
 .content{flex:1;overflow-y:auto;padding:24px;scroll-behavior:smooth}
-.page{max-width:1240px;margin:0 auto;display:flex;flex-direction:column;gap:18px;animation:pagein .25s ease}
+.page{max-width:1240px;margin:0 auto;display:flex;flex-direction:column;gap:18px}
 @keyframes pagein{from{opacity:.4;transform:translateY(4px)}to{opacity:1;transform:none}}
 .page-head{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;flex-wrap:wrap}
 .page-head p{margin:4px 0 0;color:var(--muted)}
 
 /* controls */
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;border:1px solid var(--line);background:var(--surface);color:var(--ink);padding:8px 14px;border-radius:8px;font-weight:600;cursor:pointer;white-space:nowrap;transition:background .15s,border-color .15s,transform .05s}
+.btn{position:relative;overflow:hidden;display:inline-flex;align-items:center;justify-content:center;gap:7px;border:1px solid var(--line);background:var(--surface);color:var(--ink);padding:8px 14px;border-radius:8px;font-weight:600;cursor:pointer;white-space:nowrap;transition:background .2s,border-color .2s,transform .2s var(--ease-out,ease),box-shadow .25s}
 .btn:hover{border-color:var(--muted)}
 .btn:active{transform:translateY(1px)}
 .btn[disabled]{opacity:.5;cursor:not-allowed}
@@ -163,7 +162,7 @@ table.tbl{width:100%;border-collapse:collapse;font-size:13px}
 
 .tabs{display:flex;gap:4px;border-bottom:1px solid var(--line);overflow-x:auto}
 .tabs button{all:unset;cursor:pointer;padding:10px 14px;font-weight:600;color:var(--muted);border-bottom:2px solid transparent;margin-bottom:-1px;white-space:nowrap}
-.tabs button.on{color:var(--ink);border-color:var(--accent)}
+.tabs button.on{color:var(--ink)}
 .tabs button:hover{color:var(--ink)}
 
 /* lifecycle */
@@ -224,7 +223,7 @@ table.tbl{width:100%;border-collapse:collapse;font-size:13px}
 .chart .end{fill:var(--accent);stroke:var(--surface);stroke-width:2}
 
 /* overlays */
-.overlay{position:fixed;inset:0;background:rgba(6,14,28,.5);display:grid;place-items:center;z-index:50;padding:16px;animation:fade .15s}
+.overlay{position:fixed;inset:0;background:rgba(6,14,28,.5);display:grid;place-items:center;z-index:50;padding:16px;animation:fade .25s;backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px)}
 @keyframes fade{from{opacity:0}}
 .modal{background:var(--surface);border-radius:14px;width:min(520px,100%);max-height:92vh;overflow:auto;box-shadow:0 20px 60px rgba(0,0,0,.35);animation:pop .2s ease}
 .modal.wide{width:min(720px,100%)}
@@ -283,12 +282,177 @@ table.tbl{width:100%;border-collapse:collapse;font-size:13px}
 .login-side .tag{color:#7EE2A8;font-size:18px}
 .login-side ul{list-style:none;padding:0;margin:8px 0 0;display:flex;flex-direction:column;gap:10px;font-size:15px;color:#D5E1F5}
 .login-side canvas{position:absolute;inset:0;width:100%;height:100%;opacity:.35;pointer-events:none}
-.login-side>*:not(canvas){position:relative}
+.login-side>*:not(canvas):not(.blob){position:relative}
 .login-main{display:flex;align-items:center;justify-content:center;padding:40px 24px;background:var(--surface)}
 .login-form{width:min(420px,100%);display:flex;flex-direction:column;gap:14px}
 .demo-acc{all:unset;cursor:pointer;display:flex;gap:12px;align-items:center;border:1px solid var(--line);border-radius:10px;padding:10px 12px;transition:border-color .15s,background .15s}
 .demo-acc:hover{border-color:var(--accent);background:var(--surface-2)}
 .login-tools{position:absolute;top:14px;inset-inline-end:14px;display:flex;gap:6px}
+
+
+/* ================= motion system ================= */
+:root{--ease-out:cubic-bezier(.2,.8,.2,1);--spring:cubic-bezier(.34,1.56,.64,1);--dirx:1}
+[dir="rtl"]{--dirx:-1}
+@keyframes rise{from{opacity:0;transform:translateY(16px);filter:blur(5px)}to{opacity:1;transform:none;filter:none}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}}
+@keyframes slideIn{from{opacity:0;transform:translateX(calc(-22px * var(--dirx)))}}
+@keyframes slideInEnd{from{opacity:0;transform:translateX(calc(28px * var(--dirx)))}}
+@keyframes rowIn{from{opacity:0;transform:translateX(calc(-14px * var(--dirx)))}}
+@keyframes popIn{from{opacity:0;transform:scale(.9)}to{opacity:1;transform:none}}
+@keyframes grow{from{transform:scaleY(0)}}
+@keyframes draw{from{stroke-dashoffset:1}to{stroke-dashoffset:0}}
+@keyframes fadeIn{from{opacity:0}}
+@keyframes dropIn{from{opacity:0;transform:translateY(-18px) scale(1.08)}to{opacity:1;transform:none}}
+@keyframes flashbg{0%{background:var(--ok-bg)}100%{background:transparent}}
+@keyframes shake{10%,90%{transform:translateX(-2px)}20%,80%{transform:translateX(4px)}30%,50%,70%{transform:translateX(-7px)}40%,60%{transform:translateX(7px)}}
+@keyframes floatUp{0%{opacity:0;transform:translate(-50%,8px) scale(.7)}20%{opacity:1;transform:translate(-50%,-6px) scale(1.1)}100%{opacity:0;transform:translate(-50%,-54px) scale(1)}}
+@keyframes tick{0%{transform:scale(1.12)}100%{transform:none}}
+@keyframes ripple{to{transform:scale(1);opacity:0}}
+@keyframes routebar{0%{width:0;opacity:1}60%{width:80%;opacity:1}100%{width:100%;opacity:0}}
+@keyframes burst{from{transform:rotate(var(--a)) translateX(0) scale(1);opacity:1}to{transform:rotate(var(--a)) translateX(var(--d)) scale(.2);opacity:0}}
+@keyframes drift{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(50px,-40px) scale(1.18)}}
+@keyframes ring{0%{box-shadow:0 0 0 0 color-mix(in srgb,var(--accent) 50%,transparent)}100%{box-shadow:0 0 0 10px transparent}}
+@keyframes pingSvg{from{transform:scale(1);opacity:.5}to{transform:scale(2.8);opacity:0}}
+@keyframes progress{from{transform:scaleX(1)}to{transform:scaleX(0)}}
+@keyframes fillx{from{transform:scaleX(0)}}
+@keyframes sideIn{from{transform:translateX(calc(-100% * var(--dirx)));opacity:0}}
+@keyframes topIn{from{transform:translateY(-100%);opacity:0}}
+@keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+@keyframes shine{from{transform:translateX(-150%) skewX(-20deg)}to{transform:translateX(250%) skewX(-20deg)}}
+@keyframes toastIn{from{opacity:0;transform:translateX(calc(60px * var(--dirx))) scale(.9)}}
+@keyframes toastOut{to{opacity:0;transform:translateX(calc(60px * var(--dirx))) scale(.92)}}
+@keyframes vtOut{to{opacity:0;filter:blur(6px);transform:scale(.985)}}
+@keyframes vtIn{from{opacity:0;filter:blur(6px);transform:scale(1.015)}}
+
+/* app shell entrance */
+.app .side{animation:sideIn .7s var(--ease-out) backwards}
+.app .top{animation:topIn .6s .1s var(--ease-out) backwards}
+.brand-mark{position:relative;overflow:hidden}
+.brand-mark::after{content:"";position:absolute;inset:0;width:40%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.55),transparent);animation:shine 3.5s 1s ease-in-out infinite}
+.nav{position:relative}
+.nav button{z-index:1;transition:color .25s,background .25s,transform .25s var(--ease-out);animation:slideIn .5s var(--ease-out) backwards}
+.nav button:hover{transform:translateX(calc(3px * var(--dirx)))}
+.nav button:nth-of-type(1){animation-delay:0.25s}.nav button:nth-of-type(2){animation-delay:0.31s}.nav button:nth-of-type(3){animation-delay:0.37s}.nav button:nth-of-type(4){animation-delay:0.43s}.nav button:nth-of-type(5){animation-delay:0.49s}.nav button:nth-of-type(6){animation-delay:0.55s}.nav button:nth-of-type(7){animation-delay:0.61s}.nav button:nth-of-type(8){animation-delay:0.67s}
+.nav-ind{position:absolute;left:0;top:0;width:100%;border-radius:8px;background:rgba(255,255,255,.11);transition:transform .5s var(--spring),height .3s var(--ease-out);pointer-events:none;z-index:0}
+.nav-ind::before{content:"";position:absolute;inset-inline-start:-12px;top:8px;bottom:8px;width:3px;border-radius:3px;background:#22C55E;box-shadow:0 0 12px #22C55E}
+.tabs{position:relative}
+.tab-ind{position:absolute;left:0;bottom:0;height:2px;border-radius:2px;background:var(--accent);transition:transform .45s var(--spring),width .45s var(--spring);box-shadow:0 0 8px var(--accent)}
+.route-bar{position:fixed;top:0;inset-inline-start:0;height:3px;z-index:95;background:linear-gradient(90deg,#22C55E,#7EE2A8);box-shadow:0 0 12px #22C55E;animation:routebar .75s var(--ease-out) forwards;pointer-events:none}
+
+/* page choreography */
+.page>*{animation:rise .65s var(--ease-out) backwards}
+.page>*:nth-child(1){animation-delay:0.02s}.page>*:nth-child(2){animation-delay:0.09s}.page>*:nth-child(3){animation-delay:0.16s}.page>*:nth-child(4){animation-delay:0.23s}.page>*:nth-child(5){animation-delay:0.30s}.page>*:nth-child(6){animation-delay:0.37s}.page>*:nth-child(7){animation-delay:0.44s}.page>*:nth-child(8){animation-delay:0.51s}
+.page .grid>*{animation:popIn .6s var(--ease-out) backwards}
+.page .grid>*:nth-child(1){animation-delay:0.12s}.page .grid>*:nth-child(2){animation-delay:0.19s}.page .grid>*:nth-child(3){animation-delay:0.26s}.page .grid>*:nth-child(4){animation-delay:0.33s}.page .grid>*:nth-child(5){animation-delay:0.40s}.page .grid>*:nth-child(6){animation-delay:0.47s}.page .grid>*:nth-child(7){animation-delay:0.54s}.page .grid>*:nth-child(8){animation-delay:0.61s}
+.tbl tbody tr{animation:rowIn .5s var(--ease-out) backwards}
+.tbl tbody tr:nth-child(1){animation-delay:0.12s}.tbl tbody tr:nth-child(2){animation-delay:0.15s}.tbl tbody tr:nth-child(3){animation-delay:0.19s}.tbl tbody tr:nth-child(4){animation-delay:0.23s}.tbl tbody tr:nth-child(5){animation-delay:0.26s}.tbl tbody tr:nth-child(6){animation-delay:0.30s}.tbl tbody tr:nth-child(7){animation-delay:0.33s}.tbl tbody tr:nth-child(8){animation-delay:0.36s}.tbl tbody tr:nth-child(9){animation-delay:0.40s}.tbl tbody tr:nth-child(10){animation-delay:0.44s}.tbl tbody tr:nth-child(11){animation-delay:0.47s}.tbl tbody tr:nth-child(12){animation-delay:0.51s}.tbl tbody tr:nth-child(13){animation-delay:0.54s}.tbl tbody tr:nth-child(14){animation-delay:0.58s}.tbl tbody tr:nth-child(15){animation-delay:0.61s}.tbl tbody tr:nth-child(16){animation-delay:0.65s}
+.list-item{animation:rowIn .5s var(--ease-out) backwards}
+.list-item:nth-child(1){animation-delay:0.20s}.list-item:nth-child(2){animation-delay:0.26s}.list-item:nth-child(3){animation-delay:0.32s}.list-item:nth-child(4){animation-delay:0.38s}.list-item:nth-child(5){animation-delay:0.44s}.list-item:nth-child(6){animation-delay:0.50s}.list-item:nth-child(7){animation-delay:0.56s}.list-item:nth-child(8){animation-delay:0.62s}
+.pill{animation:popIn .4s var(--spring) backwards}
+.kpi,.mini-live,.card.opp,.demo-acc{transition:transform .35s var(--ease-out),box-shadow .35s,border-color .2s,background .2s}
+.kpi:hover,.card.opp:hover{transform:translateY(-4px);box-shadow:0 14px 34px rgba(14,26,43,.14)}
+.mini-live:hover{transform:translateY(-4px);box-shadow:0 14px 34px rgba(14,26,43,.14)}
+.btn.primary:hover,.btn.navy:hover{transform:translateY(-1px);box-shadow:0 8px 20px color-mix(in srgb,var(--accent) 35%,transparent)}
+.ripple{position:absolute;border-radius:50%;background:currentColor;opacity:.28;transform:scale(0);animation:ripple .65s ease-out forwards;pointer-events:none}
+.modal{animation:pop .45s var(--spring)}
+.modal-body>*{animation:fadeUp .45s var(--ease-out) backwards}
+.modal-body>*:nth-child(1){animation-delay:0.08s}.modal-body>*:nth-child(2){animation-delay:0.13s}.modal-body>*:nth-child(3){animation-delay:0.18s}.modal-body>*:nth-child(4){animation-delay:0.23s}.modal-body>*:nth-child(5){animation-delay:0.28s}.modal-body>*:nth-child(6){animation-delay:0.33s}.modal-body>*:nth-child(7){animation-delay:0.38s}.modal-body>*:nth-child(8){animation-delay:0.43s}
+
+/* charts */
+.chart .bar{transform-box:fill-box;transform-origin:50% 100%;animation:grow 1s var(--ease-out) backwards;animation-delay:calc(var(--i) * 90ms + .25s)}
+.chart .val{animation:fadeUp .45s backwards;animation-delay:calc(var(--i) * 90ms + .8s)}
+.chart .line{stroke-dasharray:1;animation:draw 1.6s var(--ease-out) .2s backwards}
+.chart .area{animation:fadeIn 1s .8s backwards}
+.chart .dot{transform-box:fill-box;transform-origin:center;animation:popIn .45s var(--spring) backwards}
+.chart .end-ring{fill:var(--accent);transform-box:fill-box;transform-origin:center;animation:pingSvg 1.6s ease-out infinite}
+
+/* lifecycle */
+.flow .bar{position:relative;overflow:hidden}
+.flow .bar.done{background:var(--line)}
+.flow .bar.done::after{content:"";position:absolute;inset:0;background:var(--accent);transform-origin:left;animation:fillx .55s var(--ease-out) backwards;animation-delay:calc(var(--i) * 110ms + .2s)}
+[dir="rtl"] .flow .bar.done::after{transform-origin:right}
+.flow .st i{transition:background .3s,border-color .3s}
+.flow .st.done i{animation:popIn .45s var(--spring) backwards;animation-delay:calc(var(--i) * 110ms + .15s)}
+.flow .st.cur i{animation:ring 1.8s ease-out infinite}
+
+/* live room */
+.pricein{animation:dropIn .6s var(--spring),flashbg 1.3s ease;border-radius:8px}
+.shake{animation:shake .55s ease}
+.timer.tick{animation:tick .4s ease}
+.ext-float{position:absolute;left:50%;top:8px;z-index:3;font-weight:700;font-size:13px;color:var(--warn);background:var(--warn-bg);padding:3px 12px;border-radius:999px;animation:floatUp 1.8s var(--ease-out) forwards;pointer-events:none;white-space:nowrap}
+.burst{position:absolute;left:50%;top:55%;width:0;height:0;pointer-events:none;z-index:2}
+.burst i{position:absolute;left:-4px;top:-4px;width:8px;height:8px;border-radius:2px;animation:burst 1s var(--ease-out) forwards}
+.room{animation:popIn .6s var(--ease-out) backwards}
+
+/* toasts */
+.toast{position:relative;overflow:hidden;animation:toastIn .55s var(--spring)}
+.toast.out{animation:toastOut .3s ease forwards}
+.toast .tbar{position:absolute;bottom:0;left:0;right:0;height:3px;background:var(--info);opacity:.5;transform-origin:left;animation:progress 5.2s linear forwards}
+[dir="rtl"] .toast .tbar{transform-origin:right}
+.toast.ok .tbar{background:var(--accent)} .toast.warn .tbar{background:#E5A000} .toast.err .tbar{background:var(--danger)}
+
+/* theme / language transitions */
+html.vt-theme::view-transition-old(root),html.vt-theme::view-transition-new(root){animation:none;mix-blend-mode:normal}
+html.vt-lang::view-transition-old(root){animation:vtOut .3s ease both}
+html.vt-lang::view-transition-new(root){animation:vtIn .45s var(--ease-out) both}
+
+/* login wipe */
+.wipe{position:fixed;inset:0;z-index:98;display:grid;place-items:center;background:radial-gradient(circle at 50% 50%,#123a78,#071630 70%);clip-path:circle(0px at 50% 50%)}
+.wipe svg{width:72px;height:72px;animation:logoPop .6s .15s var(--spring) backwards}
+.wipe rect{fill:#14924A}.wipe polyline{fill:none;stroke:#fff;stroke-width:5;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1;animation:draw .5s .25s ease backwards}
+
+/* login entrance */
+.login-side>*:not(canvas):not(.blob){animation:rise .8s var(--ease-out) backwards}
+.login-side>*:nth-child(1){animation-delay:0.05s}.login-side>*:nth-child(2){animation-delay:0.15s}.login-side>*:nth-child(3){animation-delay:0.25s}.login-side>*:nth-child(4){animation-delay:0.35s}.login-side>*:nth-child(5){animation-delay:0.45s}.login-side>*:nth-child(6){animation-delay:0.55s}.login-side>*:nth-child(7){animation-delay:0.65s}.login-side>*:nth-child(8){animation-delay:0.75s}.login-side>*:nth-child(9){animation-delay:0.85s}
+.login-side .blob{position:absolute;width:440px;height:440px;border-radius:50%;filter:blur(80px);opacity:.5;pointer-events:none;animation:drift 11s ease-in-out infinite}
+.login-side .b1{background:#14924A;top:-140px;right:-120px}
+.login-side .b2{background:#1F4FBF;bottom:-160px;left:-140px;animation-delay:-5s}
+.login-form>*{animation:slideInEnd .65s var(--ease-out) backwards}
+.login-form>*:nth-child(1){animation-delay:0.15s}.login-form>*:nth-child(2){animation-delay:0.21s}.login-form>*:nth-child(3){animation-delay:0.27s}.login-form>*:nth-child(4){animation-delay:0.33s}.login-form>*:nth-child(5){animation-delay:0.39s}.login-form>*:nth-child(6){animation-delay:0.45s}.login-form>*:nth-child(7){animation-delay:0.51s}.login-form>*:nth-child(8){animation-delay:0.57s}.login-form>*:nth-child(9){animation-delay:0.63s}.login-form>*:nth-child(10){animation-delay:0.69s}.login-form>*:nth-child(11){animation-delay:0.75s}.login-form>*:nth-child(12){animation-delay:0.81s}
+.demo-acc:hover{transform:translateX(calc(4px * var(--dirx)))}
+.demo-acc .ic{transition:transform .3s var(--ease-out)}
+.demo-acc:hover .ic{transform:translateX(calc(4px * var(--dirx)))}
+[dir="rtl"] .demo-acc:hover .ic.flip{transform:scaleX(-1) translateX(4px)}
+.login-side>.login-live.login-live{animation:rise .8s .55s var(--ease-out) backwards,floaty 6s 1.4s ease-in-out infinite}
+.login-live{width:min(340px,100%);background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14);border-radius:14px;padding:14px 16px;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);display:flex;flex-direction:column;gap:7px;margin-top:10px;box-shadow:0 20px 50px rgba(0,0,0,.25)}
+.ll-tag{display:inline-flex;gap:7px;align-items:center;font-size:12px;font-weight:600;color:#7EE2A8;letter-spacing:.04em}
+.ll-tag i{width:8px;height:8px;border-radius:50%;background:#22C55E;color:#22C55E;animation:pulse 1.4s infinite}
+.ll-t{color:#F3C35A;font-size:13px}
+.ll-price{font-family:var(--mono);font-size:30px;font-weight:600;color:#4ADE80;font-variant-numeric:tabular-nums}
+.ll-row{display:flex;justify-content:space-between;font-size:13px;color:#C9D6EC;border-top:1px solid rgba(255,255,255,.08);padding-top:7px;animation:rowIn .55s var(--spring) backwards}
+.ll-row:first-of-type{color:#fff;font-weight:600}
+
+/* splash */
+@keyframes logoPop{from{transform:scale(.3) rotate(-14deg);opacity:0}}
+@keyframes letter{from{opacity:0;transform:translateY(46px) rotateX(85deg);filter:blur(10px)}}
+@keyframes gridmove{to{background-position:0 48px}}
+@keyframes loadbar{from{transform:scaleX(0)}}
+@keyframes fillin{to{fill-opacity:1}}
+@keyframes splashOut{from{clip-path:inset(0 0 0 0)}to{clip-path:inset(0 0 100% 0)}}
+@keyframes zoomOut{to{transform:scale(1.18);opacity:0;filter:blur(8px)}}
+.splash{position:fixed;inset:0;z-index:100;background:#071630;display:grid;place-items:center;overflow:hidden;color:#fff;cursor:pointer;font-family:var(--font)}
+.splash .glow{position:absolute;width:62vmax;height:62vmax;border-radius:50%;filter:blur(70px);opacity:.55;animation:drift 8s ease-in-out infinite}
+.splash .g1{background:radial-gradient(circle,#14924A,transparent 62%);top:-24vmax;left:-18vmax}
+.splash .g2{background:radial-gradient(circle,#1F4FBF,transparent 62%);bottom:-28vmax;right:-18vmax;animation-delay:-4s}
+.splash .gridbg{position:absolute;left:-50%;right:-50%;bottom:-10%;height:70%;background-image:linear-gradient(rgba(126,226,168,.12) 1px,transparent 1px),linear-gradient(90deg,rgba(126,226,168,.12) 1px,transparent 1px);background-size:48px 48px;transform:perspective(500px) rotateX(62deg);transform-origin:50% 100%;animation:gridmove 1.6s linear infinite;-webkit-mask-image:linear-gradient(to top,#000 10%,transparent 85%);mask-image:linear-gradient(to top,#000 10%,transparent 85%)}
+.splash-inner{position:relative;display:flex;flex-direction:column;align-items:center;gap:18px;text-align:center;padding:24px}
+.splash-logo{width:104px;height:104px;animation:logoPop 1s var(--spring) backwards;filter:drop-shadow(0 12px 30px rgba(34,197,94,.35))}
+.splash-logo rect{stroke:#22C55E;stroke-width:2.5;fill:#14924A;fill-opacity:0;stroke-dasharray:1;stroke-dashoffset:1;animation:draw .9s .1s var(--ease-out) forwards,fillin .5s .85s forwards}
+.splash-logo polyline{fill:none;stroke:#fff;stroke-width:6;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1;stroke-dashoffset:1;animation:draw .8s .6s var(--ease-out) forwards}
+.word{display:flex;gap:.05em;font-size:clamp(42px,9vw,78px);font-weight:700;letter-spacing:.08em;direction:ltr;perspective:600px}
+.word span{display:inline-block;animation:letter .8s var(--spring) backwards;animation-delay:calc(.8s + var(--i) * 75ms);background:linear-gradient(180deg,#fff,#B9C8E2);-webkit-background-clip:text;background-clip:text;color:transparent}
+.splash .stag{color:#7EE2A8;letter-spacing:.22em;text-transform:uppercase;font-size:13px;animation:fadeUp .7s 1.35s backwards}
+.splash-ticker{display:flex;align-items:center;gap:14px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:10px 16px;animation:fadeUp .7s 1.5s backwards;backdrop-filter:blur(6px);direction:ltr}
+.splash-ticker .lbl{font-size:11px;letter-spacing:.12em;color:#B9C8E2;display:flex;align-items:center;gap:6px}
+.splash-ticker .lbl i{width:7px;height:7px;border-radius:50%;background:#22C55E;color:#22C55E;animation:pulse 1.2s infinite}
+.splash-ticker .p{font-family:var(--mono);font-size:22px;font-weight:600;color:#4ADE80;min-width:7ch;text-align:end}
+.splash-ticker svg polyline{fill:none;stroke:#4ADE80;stroke-width:2;stroke-linecap:round;stroke-dasharray:1;stroke-dashoffset:1;animation:draw 1.5s 1.6s ease forwards}
+.splash-load{width:220px;height:3px;border-radius:3px;background:rgba(255,255,255,.12);overflow:hidden;animation:fadeIn .4s 1.5s backwards}
+.splash-load span{display:block;height:100%;background:linear-gradient(90deg,#22C55E,#7EE2A8);transform-origin:left;animation:loadbar 1.5s 1.55s var(--ease-out) backwards}
+.splash .skip{position:absolute;bottom:26px;left:0;right:0;text-align:center;font-size:12px;color:rgba(255,255,255,.45);animation:fadeIn .5s 1.2s backwards}
+.splash.out{animation:splashOut .85s cubic-bezier(.75,0,.2,1) forwards}
+.splash.out .splash-inner{animation:zoomOut .6s ease forwards}
+@media (max-width: 860px){ .nav-ind{display:none} .nav button.on{background:rgba(255,255,255,.12)} .app .side{animation-name:topIn} }
 
 @media (max-width: 1080px){ .g4{grid-template-columns:repeat(2,minmax(0,1fr))} .g-main,.room-body{grid-template-columns:1fr} .room-body>div+div{border-inline-start:0;border-top:1px solid var(--line)} }
 @media (max-width: 860px){
@@ -307,7 +471,7 @@ table.tbl{width:100%;border-collapse:collapse;font-size:13px}
   .timer{font-size:42px}
 }
 @media (max-width: 480px){ .g4{grid-template-columns:1fr} }
-@media (prefers-reduced-motion: reduce){ *,*::before,*::after{animation:none!important;transition:none!important} }
+@media (prefers-reduced-motion: reduce){ *,*::before,*::after{animation:none!important;transition:none!important} .splash-logo rect,.splash-logo polyline,.splash-ticker svg polyline{stroke-dashoffset:0!important;fill-opacity:1!important} }
 </style>
 </head>
 <body>
@@ -319,6 +483,7 @@ table.tbl{width:100%;border-collapse:collapse;font-size:13px}
 "use strict";
 const { useState, useEffect, useRef, useMemo, createContext, useContext } = React;
 const html = htm.bind(React.createElement);
+const REDUCE = typeof matchMedia === "function" && matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 /* ============================================================
    i18n
@@ -955,8 +1120,32 @@ const ICONS = {
 const Icon = ({ n, cls }) => html`<svg class=${"ic " + (cls || "")} viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d=${ICONS[n]} /></svg>`;
 const KIND = { DRAFT: "neutral", PREQUALIFICATION: "info", SCHEDULED: "info", LIVE: "ok", SOFT_CLOSE: "warn", CLOSED: "neutral", AWARDED: "info", COMPLETED: "ok", CANCELLED: "danger", EXPIRED: "danger", PENDING_SIGN: "warn", SIGNED: "info", DEFAULTED: "danger", PENDING: "warn", APPROVED: "ok", REJECTED: "danger", HELD: "info", RELEASED: "neutral", FORFEITED: "danger", VERIFIED: "ok" };
 const Pill = ({ kind, dot, children }) => html`<span class=${"pill pill-" + (kind || "neutral")}>${dot ? html`<i class="dot"></i>` : null}${children}</span>`;
-function Status({ s }) { const { t } = useApp(); return html`<${Pill} kind=${KIND[s]} dot=${s === "LIVE" || s === "SOFT_CLOSE"}>${t("st_" + s)}<//>`; }
-const Kpi = ({ label, value, sub, tone }) => html`<div class="kpi"><div class="kpi-label">${label}</div><div class=${"kpi-value " + (tone || "")}>${value}</div>${sub ? html`<div class="kpi-sub">${sub}</div>` : null}</div>`;
+function Status({ s }) { const { t } = useApp(); return html`<${Pill} key=${s} kind=${KIND[s]} dot=${s === "LIVE" || s === "SOFT_CLOSE"}>${t("st_" + s)}<//>`; }
+function AnimNum({ value, start, format = (v) => Math.round(v).toLocaleString("en-US"), ms = 900 }) {
+  const init = REDUCE ? value : start ?? 0;
+  const [disp, setDisp] = useState(init); const cur = useRef(init); const raf = useRef(0);
+  useEffect(() => {
+    if (REDUCE) { cur.current = value; setDisp(value); return; }
+    const a = cur.current, b = value; if (a === b) return;
+    const t0 = performance.now(); cancelAnimationFrame(raf.current);
+    const step = (now) => { const p = Math.min(1, (now - t0) / ms); const e = 1 - Math.pow(1 - p, 3); const v = a + (b - a) * e; cur.current = v; setDisp(v); if (p < 1) raf.current = requestAnimationFrame(step); };
+    raf.current = requestAnimationFrame(step); return () => cancelAnimationFrame(raf.current);
+  }, [value]);
+  return format(disp);
+}
+function useIndicator(ref) {
+  const [st, setSt] = useState(null);
+  React.useLayoutEffect(() => {
+    const c = ref.current; const el = c && c.querySelector(".on");
+    if (!el) { if (st) setSt(null); return; }
+    const n = { x: el.offsetLeft, y: el.offsetTop, w: el.offsetWidth, h: el.offsetHeight };
+    if (!st || n.x !== st.x || n.y !== st.y || n.w !== st.w || n.h !== st.h) setSt(n);
+  });
+  return st;
+}
+const BURST_COLORS = ["#22C55E", "#7EE2A8", "#F3C35A", "#8DB4FF", "#14924A", "#ffffff"];
+const Burst = () => html`<span class="burst" aria-hidden="true">${Array.from({ length: 18 }, (_, i) => html`<i key=${i} style=${{ "--a": i * 20 + "deg", "--d": 46 + (i % 3) * 20 + "px", background: BURST_COLORS[i % 6] }}></i>`)}</span>`;
+const Kpi = ({ label, value, num, fmt, sub, tone }) => html`<div class="kpi"><div class="kpi-label">${label}</div><div class=${"kpi-value " + (tone || "")}>${num != null ? html`<${AnimNum} value=${num} format=${fmt} />` : value}</div>${sub ? html`<div class="kpi-sub">${sub}</div>` : null}</div>`;
 const Card = ({ title, sub, right, children, cls }) => html`<section class=${"card " + (cls || "")}>${title ? html`<div class="card-head"><div><h2>${title}</h2>${sub ? html`<p>${sub}</p>` : null}</div>${right || null}</div>` : null}${children}</section>`;
 function PageHead({ title, sub, right }) { return html`<div class="page-head"><div><h1>${title}</h1>${sub ? html`<p>${sub}</p>` : null}</div>${right ? html`<div class="row">${right}</div>` : null}</div>`; }
 function Modal({ title, onClose, children, wide }) {
@@ -974,7 +1163,7 @@ function BarChart({ data, format = money, hlLast }) {
   return html`<svg class="chart" viewBox=${`0 0 ${W} ${H}`} role="img">
     ${[0, 0.25, 0.5, 0.75, 1].map((f) => { const y = pt + (H - pt - pb) * (1 - f); return html`<g key=${f}><line x1=${pl} x2=${W - pr} y1=${y} y2=${y} class="grid" /><text x=${pl - 8} y=${y + 4} class="axis" text-anchor="end">${format(max * f, true)}</text></g>`; })}
     ${data.map((d, i) => { const h = (H - pt - pb) * (d.value / max); const x = pl + i * bw + bw * 0.22; const y = H - pb - h; const w = bw * 0.56;
-      return html`<g key=${i}><rect x=${x} y=${y} width=${w} height=${Math.max(0, h)} rx="4" class=${"bar" + (hlLast && i === data.length - 1 ? " bar-hl" : "")}><title>${d.label}: ${format(d.value)}</title></rect>${d.value > 0 ? html`<text x=${x + w / 2} y=${y - 7} text-anchor="middle" class="val">${format(d.value, true)}</text>` : null}<text x=${x + w / 2} y=${H - 10} text-anchor="middle" class="axis">${d.label}</text></g>`; })}
+      return html`<g key=${i}><rect style=${{ "--i": i }} x=${x} y=${y} width=${w} height=${Math.max(0, h)} rx="4" class=${"bar" + (hlLast && i === data.length - 1 ? " bar-hl" : "")}><title>${d.label}: ${format(d.value)}</title></rect>${d.value > 0 ? html`<text style=${{ "--i": i }} x=${x + w / 2} y=${y - 7} text-anchor="middle" class="val">${format(d.value, true)}</text>` : null}<text x=${x + w / 2} y=${H - 10} text-anchor="middle" class="axis">${d.label}</text></g>`; })}
   </svg>`;
 }
 function PriceChart({ a, mine, height = 210 }) {
@@ -1000,16 +1189,16 @@ function PriceChart({ a, mine, height = 210 }) {
     ${ticks.map((v, i) => html`<g key=${i}><line x1=${pl} x2=${W - pr} y1=${Y(v)} y2=${Y(v)} class="grid" /><text x=${pl - 8} y=${Y(v) + 4} class="axis" text-anchor="end">${money(v, true)}</text></g>`)}
     <text x=${pl} y=${H - 6} class="axis">${fTime(t0).slice(0, 5)}</text><text x=${W - pr} y=${H - 6} class="axis" text-anchor="end">${fTime(t1).slice(0, 5)}</text>
     <line x1=${pl} x2=${W - pr} y1=${Y(ymax)} y2=${Y(ymax)} class="budget" /><text x=${W - pr - 4} y=${Y(ymax) + 14} class="budget-t" text-anchor="end">${t("d_budget")} ${money(ymax)}</text>
-    <path d=${area} class="area" /><path d=${d} class="line" />
+    <path d=${area} class="area" /><path d=${d} class="line" pathLength="1" />
     ${bids.map((b) => html`<circle key=${b.id} cx=${X(b.placed_at)} cy=${Y(b.amount)} r=${b.supplier_company_id === mine ? 4 : 3} class=${"dot" + (b.supplier_company_id === mine ? " me" : "")} />`)}
-    ${last ? html`<circle cx=${X(last[0])} cy=${Y(last[1])} r="6" class="end" />` : null}
+    ${last ? html`<circle cx=${X(last[0])} cy=${Y(last[1])} r="6" class="end-ring" /><circle cx=${X(last[0])} cy=${Y(last[1])} r="6" class="end" />` : null}
   </svg>`;
 }
 const FLOW = ["DRAFT", "PREQUALIFICATION", "SCHEDULED", "LIVE", "CLOSED", "AWARDED", "COMPLETED"];
 function Lifecycle({ s }) {
   const { t } = useApp();
   const idx = FLOW.indexOf(s === "SOFT_CLOSE" ? "LIVE" : s);
-  return html`<div class="flow" aria-label=${t("lifecycle")}>${FLOW.map((x, i) => html`<${React.Fragment} key=${x}>${i > 0 ? html`<span class=${"bar" + (idx >= i ? " done" : "")}></span>` : null}<span class=${"st" + (i < idx || (idx === FLOW.length - 1 && i === idx) ? " done" : "") + (i === idx ? " cur" : "")}><i>${i < idx || (s === "COMPLETED" && i === idx) ? "✓" : i + 1}</i>${x === "LIVE" && s === "SOFT_CLOSE" ? t("st_SOFT_CLOSE") : t("st_" + x)}</span><//>`)}${idx < 0 ? html`<span style=${{ marginInlineStart: "12px" }}><${Status} s=${s} /></span>` : null}</div>`;
+  return html`<div class="flow" aria-label=${t("lifecycle")}>${FLOW.map((x, i) => html`<${React.Fragment} key=${x}>${i > 0 ? html`<span style=${{ "--i": i }} class=${"bar" + (idx >= i ? " done" : "")}></span>` : null}<span style=${{ "--i": i }} class=${"st" + (i < idx || (idx === FLOW.length - 1 && i === idx) ? " done" : "") + (i === idx ? " cur" : "")}><i>${i < idx || (s === "COMPLETED" && i === idx) ? "✓" : i + 1}</i>${x === "LIVE" && s === "SOFT_CLOSE" ? t("st_SOFT_CLOSE") : t("st_" + x)}</span><//>`)}${idx < 0 ? html`<span style=${{ marginInlineStart: "12px" }}><${Status} s=${s} /></span>` : null}</div>`;
 }
 function monthBuckets(lang, n = 6) {
   const now = new Date(clock.now()); const out = [];
@@ -1032,8 +1221,8 @@ function LivePanel({ a, reveal }) {
   return html`<div class="grid g-main">
     <div class="stack" style=${{ gap: "16px" }}>
       <div class="grid g3">
-        <div class="kpi timer-box"><div class="kpi-label">${isLive(a) ? t("time_remaining") : t("ended")}</div><div class=${"kpi-value " + (isLive(a) && remain < 60 * SEC ? "bad" : "")}>${isLive(a) ? dur(remain) : "00:00"}</div>${a.status === "SOFT_CLOSE" ? html`<span class="softclose">${t("softclose_active", { e: a.extension_sec + "s" })}</span>` : html`<div class="kpi-sub">${t("extensions")}: ${a.extensions}</div>`}</div>
-        <div class="kpi"><div class="kpi-label">${t("lowest")}</div><div key=${low ? low.id : 0} class="kpi-value good flash">${low ? money(low.amount) : "—"}</div><div class="kpi-sub">${low ? (reveal ? coName(low.supplier_company_id) : low.anon_label) : t("no_bids_yet").split(".")[0]}</div></div>
+        <div class="kpi timer-box" style=${{ position: "relative" }}>${a.extensions && isLive(a) ? html`<span key=${"x" + a.extensions} class="ext-float">+${a.extension_sec}s</span>` : null}<div class="kpi-label">${isLive(a) ? t("time_remaining") : t("ended")}</div><div class=${"kpi-value " + (isLive(a) && remain < 60 * SEC ? "bad" : "")}>${isLive(a) ? dur(remain) : "00:00"}</div>${a.status === "SOFT_CLOSE" ? html`<span class="softclose">${t("softclose_active", { e: a.extension_sec + "s" })}</span>` : html`<div class="kpi-sub">${t("extensions")}: ${a.extensions}</div>`}</div>
+        <div class="kpi"><div class="kpi-label">${t("lowest")}</div><div key=${low ? low.id : 0} class="kpi-value good pricein">${low ? money(low.amount) : "—"}</div><div class="kpi-sub">${low ? (reveal ? coName(low.supplier_company_id) : low.anon_label) : t("no_bids_yet").split(".")[0]}</div></div>
         <div class="kpi"><div class="kpi-label">${t("saving_so_far")}</div><div class="kpi-value">${low ? money(a.budget_ceiling - low.amount) : "$0"}</div><div class="kpi-sub">${low ? pct((a.budget_ceiling - low.amount) / a.budget_ceiling) : "0%"} · ${t("bids_n", { n: bidsOf(a.id).length })}</div></div>
       </div>
       <${Card} title=${t("price_curve")}><${PriceChart} a=${a} /><//>
@@ -1072,10 +1261,10 @@ function BuyerDashboard() {
   return html`<div class="page">
     <${PageHead} title=${t("b_dash_title")} sub=${t("b_dash_sub", { co: coName(cid) })} right=${html`<button class="btn primary" onClick=${() => go("b-create")}><${Icon} n="plus" />${t("new_auction")}</button>`} />
     <div class="grid g4">
-      <${Kpi} label=${t("k_savings")} value=${money(savings)} tone="good" sub=${t("k_completed_n", { n: done.length })} />
-      <${Kpi} label=${t("k_avg_savings")} value=${budgets ? pct(savings / budgets) : "—"} />
-      <${Kpi} label=${t("k_active")} value=${active.length} sub=${t("k_live_n", { n: live.length })} />
-      <${Kpi} label=${t("k_actions")} value=${att.length} tone=${att.length ? "bad" : ""} sub=${t("k_spend") + ": " + money(spend, true)} />
+      <${Kpi} label=${t("k_savings")} num=${savings} fmt=${money} tone="good" sub=${t("k_completed_n", { n: done.length })} />
+      <${Kpi} label=${t("k_avg_savings")} num=${budgets ? savings / budgets : 0} fmt=${(v) => pct(v)} />
+      <${Kpi} label=${t("k_active")} num=${active.length} sub=${t("k_live_n", { n: live.length })} />
+      <${Kpi} label=${t("k_actions")} num=${att.length} tone=${att.length ? "bad" : ""} sub=${t("k_spend") + ": " + money(spend, true)} />
     </div>
     <div class="grid g-main">
       <${Card} title=${t("savings_by_month")} sub=${t("savings_by_month_sub")}><${BarChart} data=${months} hlLast=${true} /><//>
@@ -1122,6 +1311,7 @@ function AuctionDetail({ id, adminMode }) {
   const prevStatus = useRef(a.status);
   useEffect(() => { if (prevStatus.current !== a.status) { const was = prevStatus.current; prevStatus.current = a.status; if (a.status === "CLOSED" || (a.status === "LIVE" && was === "SCHEDULED")) setTab(a.status === "CLOSED" ? "result" : "live"); } });
   const owner = user.role === "BUYER" && a.buyer_company_id === user.company_id;
+  const tabsRef = useRef(null); const tind = useIndicator(tabsRef);
   const act = (fn, msg) => { fn(); emit(); if (msg) toast(msg, "ok"); };
   return html`<div class="page">
     <div><button class="btn ghost sm" onClick=${() => go(adminMode ? "a-live" : "b-auctions")}><${Icon} n="back" cls="flip" />${t("back")}</button></div>
@@ -1132,7 +1322,7 @@ function AuctionDetail({ id, adminMode }) {
       </div>` : null}
     </div>
     <${Card}><${Lifecycle} s=${a.status} /><//>
-    <div class="tabs" role="tablist">${["overview", "prequal", "live", "result"].map((k) => html`<button key=${k} role="tab" aria-selected=${tab === k} class=${tab === k ? "on" : ""} onClick=${() => setTab(k)}>${t("tab_" + k)}${k === "prequal" && prequalsOf(a.id).some((p) => p.status === "PENDING") ? html` <span class="badge">${prequalsOf(a.id).filter((p) => p.status === "PENDING").length}</span>` : null}${k === "live" && isLive(a) ? html` <${Pill} kind="ok" dot=${true}>${t("st_LIVE")}<//>` : null}</button>`)}</div>
+    <div class="tabs" role="tablist" ref=${tabsRef}>${tind ? html`<span class="tab-ind" style=${{ transform: `translateX(${tind.x}px)`, width: tind.w + "px" }}></span>` : null}${["overview", "prequal", "live", "result"].map((k) => html`<button key=${k} role="tab" aria-selected=${tab === k} class=${tab === k ? "on" : ""} onClick=${() => setTab(k)}>${t("tab_" + k)}${k === "prequal" && prequalsOf(a.id).some((p) => p.status === "PENDING") ? html` <span class="badge">${prequalsOf(a.id).filter((p) => p.status === "PENDING").length}</span>` : null}${k === "live" && isLive(a) ? html` <${Pill} kind="ok" dot=${true}>${t("st_LIVE")}<//>` : null}</button>`)}</div>
     ${tab === "overview" ? html`<${AuctionOverview} a=${a} />` : null}
     ${tab === "prequal" ? html`<${PrequalTab} a=${a} owner=${owner} />` : null}
     ${tab === "live" ? html`<${LivePanel} a=${a} reveal=${adminMode} />` : null}
@@ -1320,7 +1510,7 @@ function SupplierDashboard() {
     <div class="grid g4">
       <${Kpi} label=${t("k_winrate")} value=${closed.length ? pct(s.wins / Math.max(closed.length, s.wins), 0) : "—"} sub=${t("k_winrate_sub", { w: s.wins, n: Math.max(closed.length, s.wins) })} />
       <${Kpi} label=${t("k_rooms")} value=${approved.filter(isLive).length} tone=${approved.filter(isLive).length ? "good" : ""} />
-      <${Kpi} label=${t("k_won_value")} value=${money(s.value, true)} />
+      <${Kpi} label=${t("k_won_value")} num=${s.value} fmt=${(v) => money(v, true)} />
       <${Kpi} label=${t("k_pending")} value=${pendingSign.length + invites.length} tone=${pendingSign.length + invites.length ? "bad" : ""} />
     </div>
     ${pendingSign.map((c) => html`<${Callout} key=${c.id} kind="ok" icon="file"><b>#${c.auction_id} <bdi>${auc(c.auction_id).title}</bdi></b> · ${money(c.final_price)} · ${t("tl_awaiting", { t: durWords(c.sign_deadline - clock.now()) })} <button class="btn sm primary" style=${{ marginInlineStart: "8px" }} onClick=${() => go("s-contracts")}>${t("sign")}</button><//>`)}
@@ -1445,14 +1635,14 @@ function LiveRoom({ id }) {
       <div class="room-body">
         <div>
           ${a.status === "SCHEDULED" ? html`<div class="card timer-box"><div class="lbl">${t("room_wait")}</div><div class="timer">${dur(a.start_time - now)}</div><p class="muted" style=${{ margin: 0 }}>${t("not_live_yet")}</p></div>` : html`
-          <div class="card timer-box" style=${{ boxShadow: "none" }}>
+          <div class="card timer-box" style=${{ boxShadow: "none", position: "relative" }}>${a.extensions && live ? html`<span key=${"x" + a.extensions} class="ext-float">+${a.extension_sec}s</span>` : null}
             <div class="lbl">${live ? t("time_remaining") : t("ended")}</div>
-            <div class=${"timer" + (live && remain < 60 * SEC ? " urgent" : "")}>${live ? dur(remain) : "00:00"}</div>
+            <div key=${live && remain < 15 * SEC ? "k" + Math.ceil(remain / 1000) : "t"} class=${"timer" + (live && remain < 60 * SEC ? " urgent" : "") + (live && remain < 15 * SEC ? " tick" : "")}>${live ? dur(remain) : "00:00"}</div>
             ${view.status === "SOFT_CLOSE" && live ? html`<span class="softclose">${t("softclose_active", { e: "+" + dur(a.extension_sec * SEC) })}</span>` : null}
           </div>
           <div class="grid g2">
-            <div class="card" style=${{ boxShadow: "none" }}><div class="kpi-label">${t("current_lowest")}</div><div key=${low ? low.id : 0} class="big-money good flash">${low ? money(low.amount) : "—"}</div><div class="small muted">${low ? (leading ? t("by_you") : t("by_vendor", { label: low.anon_label })) : t("no_bids_yet")}</div></div>
-            <div class="card" style=${{ boxShadow: "none" }}><div class="kpi-label">${t("your_last")}</div><div class=${"big-money " + (myBids[0] ? (leading ? "good" : "bad") : "")}>${myBids[0] ? money(myBids[0].amount) : "—"}</div><div class="small muted">${!myBids[0] ? t("no_bid_yet") : leading ? t("leading") : t("outbid_msg", { amount: money(low.amount) })}</div></div>
+            <div class="card" style=${{ boxShadow: "none" }}><div class="kpi-label">${t("current_lowest")}</div><div key=${low ? low.id : 0} class="big-money good pricein">${low ? money(low.amount) : "—"}</div><div class="small muted">${low ? (leading ? t("by_you") : t("by_vendor", { label: low.anon_label })) : t("no_bids_yet")}</div></div>
+            <div key=${"last-" + (leading ? "L" : low ? low.id : 0)} class=${"card" + (myBids[0] && !leading ? " shake" : "")} style=${{ boxShadow: "none", position: "relative" }}>${leading && myBids[0] ? html`<${Burst} key=${myBids[0].id} />` : null}<div class="kpi-label">${t("your_last")}</div><div class=${"big-money " + (myBids[0] ? (leading ? "good" : "bad") : "")}>${myBids[0] ? money(myBids[0].amount) : "—"}</div><div class="small muted">${!myBids[0] ? t("no_bid_yet") : leading ? t("leading") : t("outbid_msg", { amount: money(low.amount) })}</div></div>
           </div>`}
           ${live ? html`<form class="card" style=${{ boxShadow: "none" }} onSubmit=${(e) => { e.preventDefault(); place(amount || suggested); }}>
             <label class="kpi-label" for="bid-amt">${t("new_bid", { max: money(max), dec: money(a.min_decrement) })}</label>
@@ -1511,10 +1701,10 @@ function AdminDashboard() {
   return html`<div class="page">
     <${PageHead} title=${t("a_dash_title")} sub=${t("a_dash_sub")} />
     <div class="grid g4">
-      <${Kpi} label=${t("k_verified")} value=${verified} />
+      <${Kpi} label=${t("k_verified")} num=${verified} />
       <${Kpi} label=${t("k_pending_verif")} value=${pending.length} tone=${pending.length ? "bad" : ""} />
-      <${Kpi} label=${t("k_held")} value=${money(held)} sub=${t("k_live_n", { n: live.length })} />
-      <${Kpi} label=${t("k_gmv")} value=${money(gmv, true)} tone="good" />
+      <${Kpi} label=${t("k_held")} num=${held} fmt=${money} sub=${t("k_live_n", { n: live.length })} />
+      <${Kpi} label=${t("k_gmv")} num=${gmv} fmt=${(v) => money(v, true)} tone="good" />
     </div>
     <div class="grid g-main">
       <${Card} title=${t("gmv_by_month")}><${BarChart} data=${months} hlLast=${true} /><//>
@@ -1606,6 +1796,19 @@ function NetCanvas() {
   }, []);
   return html`<canvas ref=${ref}></canvas>`;
 }
+function LoginLive() {
+  const [st, setSt] = useState({ p: 46800, t: 134, rows: [{ k: 1, l: "Vendor #3", v: 46800 }, { k: 0, l: "Vendor #5", v: 47250 }] });
+  useEffect(() => {
+    const tk = setInterval(() => setSt((s) => ({ ...s, t: s.t > 1 ? s.t - 1 : 180 })), 1000);
+    const id = setInterval(() => setSt((s) => { let v = s.p - 50 * Math.ceil(Math.random() * 6); if (v < 44200) v = 49500; return { ...s, p: v, t: s.t < 120 ? s.t + 60 : s.t, rows: [{ k: s.rows[0].k + 1, l: "Vendor #" + pick([2, 3, 5, 7, 9, 11]), v }, ...s.rows].slice(0, 3) }; }), 2600);
+    return () => { clearInterval(id); clearInterval(tk); };
+  }, []);
+  return html`<div class="login-live" aria-hidden="true">
+    <div class="row between"><span class="ll-tag"><i></i>LIVE · 100 Laptops - Core i7</span><span class="mono ll-t">${dur(st.t * 1000)}</span></div>
+    <div class="ll-price">$<${AnimNum} value=${st.p} start=${st.p} ms=${700} /></div>
+    ${st.rows.map((r) => html`<div class="ll-row" key=${r.k}><span>${r.l}</span><span class="mono">${money(r.v)}</span></div>`)}
+  </div>`;
+}
 function Login({ onLogin, tools }) {
   const { t } = useApp();
   const [mode, setMode] = useState("login");
@@ -1621,17 +1824,17 @@ function Login({ onLogin, tools }) {
   const demo = [[1, "BUYER"], [2, "SUPPLIER"], [3, "ADMIN"]];
   const submitReg = (e) => { e.preventDefault(); setErr(""); if (!reg.name.trim() || !reg.tax.trim() || !reg.person.trim() || !reg.email.trim()) return setErr(t("reg_err_req")); if (db.users.some((u) => u.email === reg.email.trim().toLowerCase())) return setErr(t("reg_err_email")); engine.register(reg); emit(); setRegDone(reg.name.trim()); };
   return html`<div class="login">
-    <div class="login-side"><${NetCanvas} />
+    <div class="login-side"><div class="blob b1"></div><div class="blob b2"></div><${NetCanvas} />
       <div class="brand" style=${{ padding: 0 }}><div class="brand-mark">W</div></div>
       <h1>Wardly</h1><div class="tag">${t("app_tag")}</div>
-      <ul><li>✓ ${t("feat1")}</li><li>✓ ${t("feat2")}</li><li>✓ ${t("feat3")}</li><li>✓ ${t("feat4")}</li></ul>
+      <ul><li>✓ ${t("feat1")}</li><li>✓ ${t("feat2")}</li><li>✓ ${t("feat3")}</li><li>✓ ${t("feat4")}</li></ul><${LoginLive} />
     </div>
     <div class="login-main" style=${{ position: "relative" }}>
       <div class="login-tools">${tools}</div>
       ${mode === "login" ? html`<form class="login-form" onSubmit=${(e) => { e.preventDefault(); tryLogin(email); }}>
         <h1>${t("login_title")}</h1>
         <div class="small muted">${t("login_demo")}</div>
-        ${demo.map(([id, role]) => { const u = usr(id); return html`<button type="button" class="demo-acc" key=${id} onClick=${() => onLogin(id)}><div class="avatar" style=${{ background: role === "BUYER" ? "#14924A" : role === "SUPPLIER" ? "#1F4FBF" : "#0B2A5B" }}>${initials(u.full_name)}</div><div class="grow"><b>${t("role_" + role)}</b> · ${u.full_name}<div class="small muted">${u.company_id ? coName(u.company_id) : "Wardly"} · ${u.email}</div></div><${Icon} n="next" cls="flip" /></button>`; })}
+        ${demo.map(([id, role]) => { const u = usr(id); return html`<button type="button" class="demo-acc" key=${id} onClick=${(e) => onLogin(id, e)}><div class="avatar" style=${{ background: role === "BUYER" ? "#14924A" : role === "SUPPLIER" ? "#1F4FBF" : "#0B2A5B" }}>${initials(u.full_name)}</div><div class="grow"><b>${t("role_" + role)}</b> · ${u.full_name}<div class="small muted">${u.company_id ? coName(u.company_id) : "Wardly"} · ${u.email}</div></div><${Icon} n="next" cls="flip" /></button>`; })}
         <div class="small muted" style=${{ marginTop: "6px" }}>${t("login_or")}</div>
         <div class="field"><label for="em">${t("login_email")}</label><input id="em" class="input" type="email" value=${email} onChange=${(e) => setEmail(e.target.value)} /></div>
         <div class="field"><label for="pw">${t("login_password")}</label><input id="pw" class="input" type="password" value=${pw} onChange=${(e) => setPw(e.target.value)} /></div>
@@ -1698,13 +1901,51 @@ function SimPanel() {
   </div>`;
 }
 function Toast({ x, onDone }) {
-  const { t } = useApp();
-  useEffect(() => { const id = setTimeout(onDone, 5200); return () => clearTimeout(id); }, []);
+  const { t } = useApp(); const [out, setOut] = useState(false);
+  const close = () => { setOut(true); setTimeout(onDone, REDUCE ? 0 : 280); };
+  useEffect(() => { const id = setTimeout(close, 5200); return () => clearTimeout(id); }, []);
   const text = x.text || t("n_" + x.type, x.params);
   const kind = x.kind || (["outbid", "contract_defaulted", "prequal_rejected", "auction_expired", "cancelled"].includes(x.type) ? "warn" : ["awarded_you", "failover_you", "prequal_approved", "contract_signed", "delivered", "auction_closed"].includes(x.type) ? "ok" : "");
-  return html`<div class=${"toast " + kind} role="status"><${Icon} n=${kind === "warn" || kind === "err" ? "warn" : kind === "ok" ? "check" : "bell"} /><div style=${{ flex: 1 }}>${text}</div><button class="icon-btn" style=${{ width: "22px", height: "22px" }} onClick=${onDone} aria-label="Dismiss"><${Icon} n="x" /></button></div>`;
+  return html`<div class=${"toast " + kind + (out ? " out" : "")} role="status"><span class="tbar"></span><${Icon} n=${kind === "warn" || kind === "err" ? "warn" : kind === "ok" ? "check" : "bell"} /><div style=${{ flex: 1 }}>${text}</div><button class="icon-btn" style=${{ width: "22px", height: "22px" }} onClick=${close} aria-label="Dismiss"><${Icon} n="x" /></button></div>`;
 }
 
+const LOGO = (cls) => html`<svg class=${cls} viewBox="0 0 96 96" aria-hidden="true"><rect x="4" y="4" width="88" height="88" rx="24" pathLength="1" /><polyline points="24,32 36,66 48,42 60,66 72,32" pathLength="1" /></svg>`;
+function Splash({ onReveal, onDone }) {
+  const [out, setOut] = useState(false); const [price, setPrice] = useState(50000); const done = useRef(false);
+  const finish = () => { if (done.current) return; done.current = true; setOut(true); onReveal(); setTimeout(onDone, REDUCE ? 0 : 850); };
+  useEffect(() => { const a = setTimeout(() => setPrice(46100), 1550); const b = setTimeout(finish, REDUCE ? 500 : 3400); return () => { clearTimeout(a); clearTimeout(b); }; }, []);
+  return html`<div class=${"splash" + (out ? " out" : "")} onClick=${finish} role="presentation">
+    <div class="glow g1"></div><div class="glow g2"></div><div class="gridbg"></div>
+    <div class="splash-inner">
+      ${LOGO("splash-logo")}
+      <div class="word" aria-label="Wardly">${"WARDLY".split("").map((c, i) => html`<span key=${i} style=${{ "--i": i }}>${c}</span>`)}</div>
+      <div class="stag">B2B Reverse Auctions · مزادات عكسية</div>
+      <div class="splash-ticker"><span class="lbl"><i></i>LIVE · LOWEST BID</span><span class="p">$<${AnimNum} value=${price} start=${50000} ms=${1500} /></span><svg width="96" height="30" viewBox="0 0 96 30"><polyline pathLength="1" points="2,4 16,6 28,11 42,12 54,17 66,19 80,24 94,26" /></svg></div>
+      <div class="splash-load"><span></span></div>
+    </div>
+    <div class="skip">click to skip · اضغط للتخطي</div>
+  </div>`;
+}
+function Wipe({ x, y }) {
+  const ref = useRef(null);
+  useEffect(() => {
+    const el = ref.current; const r = Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y));
+    el.animate([{ clipPath: `circle(0px at ${x}px ${y}px)` }, { clipPath: `circle(${r}px at ${x}px ${y}px)` }], { duration: 560, easing: "cubic-bezier(.7,0,.3,1)", fill: "forwards" });
+    const id = setTimeout(() => el.animate([{ opacity: 1, transform: "scale(1)" }, { opacity: 0, transform: "scale(1.04)" }], { duration: 650, easing: "ease", fill: "forwards" }), 640);
+    return () => clearTimeout(id);
+  }, []);
+  return html`<div class="wipe" ref=${ref}>${LOGO("")}</div>`;
+}
+document.addEventListener("pointerdown", (e) => {
+  if (REDUCE) return;
+  const b = e.target.closest && e.target.closest(".btn, .demo-acc, .nav button, .seg button");
+  if (!b || b.disabled) return;
+  const r = b.getBoundingClientRect(); const d = Math.max(r.width, r.height) * 2.2;
+  const sp = document.createElement("span"); sp.className = "ripple";
+  sp.style.cssText = `width:${d}px;height:${d}px;left:${e.clientX - r.left - d / 2}px;top:${e.clientY - r.top - d / 2}px`;
+  if (getComputedStyle(b).position === "static") b.style.position = "relative";
+  b.style.overflow = "hidden"; b.appendChild(sp); setTimeout(() => sp.remove(), 700);
+}, true);
 function App() {
   const [, force] = useState(0);
   useEffect(() => { const h = () => force((x) => x + 1); listeners.add(h); const id = setInterval(() => { engine.tick(); emit(); }, 250); return () => { listeners.delete(h); clearInterval(id); }; }, []);
@@ -1714,8 +1955,13 @@ function App() {
   const [uid, setUid] = useState(null);
   const [view, setView] = useState({ name: null, id: null });
   const [toasts, setToasts] = useState([]);
+  const [splash, setSplash] = useState("show");
+  const [wipe, setWipe] = useState(null);
+  const [navKey, setNavKey] = useState(0);
   const lastN = useRef(0);
   const contentRef = useRef(null);
+  const navRef = useRef(null);
+  const navInd = useIndicator(navRef);
   useEffect(() => { document.documentElement.lang = lang; document.documentElement.dir = lang === "ar" ? "rtl" : "ltr"; }, [lang]);
   useEffect(() => { document.documentElement.setAttribute("data-theme", theme); }, [theme]);
   const t = useMemo(() => makeT(lang), [lang]);
@@ -1726,11 +1972,21 @@ function App() {
     const fresh = db.notifications.filter((n) => n.user_id === user.id && n.id > lastN.current);
     if (fresh.length) { lastN.current = Math.max(...fresh.map((n) => n.id)); setToasts((ts) => [...ts, ...fresh.slice(-3).map((n) => ({ ...n, tid: Math.random() }))].slice(-4)); }
   });
-  const login = (id) => { lastN.current = db.notifications.reduce((m, n) => Math.max(m, n.id), 0); setUid(id); setView({ name: HOME[usr(id).role], id: null }); setToasts([]); };
-  const go = (name, id = null) => { setView({ name, id }); if (contentRef.current) contentRef.current.scrollTop = 0; };
+  const doLogin = (id) => { lastN.current = db.notifications.reduce((m, n) => Math.max(m, n.id), 0); setUid(id); setView({ name: HOME[usr(id).role], id: null }); setToasts([]); };
+  const withWipe = (e, fn) => { if (REDUCE) return fn(); const x = e && e.clientX ? e.clientX : innerWidth / 2, y = e && e.clientY ? e.clientY : innerHeight / 2; setWipe({ x, y, k: Math.random() }); setTimeout(fn, 560); setTimeout(() => setWipe(null), 1300); };
+  const login = (id, e) => withWipe(e, () => doLogin(id));
+  const logout = (e) => withWipe(e, () => setUid(null));
+  const vt = (cls, fn) => { if (REDUCE || !document.startViewTransition) { fn(); return null; } const root = document.documentElement; root.classList.add(cls); const tr = document.startViewTransition(() => ReactDOM.flushSync(fn)); tr.finished.finally(() => root.classList.remove(cls)); return tr; };
+  const toggleTheme = (e) => {
+    const next = theme === "dark" ? "light" : "dark"; const x = e.clientX || innerWidth - 40, y = e.clientY || 30;
+    const tr = vt("vt-theme", () => { setTheme(next); document.documentElement.setAttribute("data-theme", next); });
+    if (tr) tr.ready.then(() => { const r = Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y)); document.documentElement.animate({ clipPath: [`circle(0px at ${x}px ${y}px)`, `circle(${r}px at ${x}px ${y}px)`] }, { duration: 700, easing: "cubic-bezier(.4,0,.2,1)", pseudoElement: "::view-transition-new(root)" }); }).catch(() => {});
+  };
+  const toggleLang = () => { const next = lang === "en" ? "ar" : "en"; vt("vt-lang", () => { setLang(next); document.documentElement.lang = next; document.documentElement.dir = next === "ar" ? "rtl" : "ltr"; }); };
+  const go = (name, id = null) => { setView({ name, id }); setNavKey((k) => k + 1); if (contentRef.current) contentRef.current.scrollTop = 0; };
   const toast = (text, kind) => setToasts((ts) => [...ts, { text, kind, tid: Math.random() }].slice(-4));
   const ctx = { t, lang, user, go, toast };
-  const tools = html`<button class="btn ghost sm" onClick=${() => setLang(lang === "en" ? "ar" : "en")}><${Icon} n="globe" />${t("language")}</button><button class="icon-btn" aria-label=${t("theme")} onClick=${() => setTheme(theme === "dark" ? "light" : "dark")}><${Icon} n=${theme === "dark" ? "sun" : "moon"} /></button>`;
+  const tools = html`<button class="btn ghost sm" onClick=${toggleLang}><${Icon} n="globe" />${t("language")}</button><button class="icon-btn" aria-label=${t("theme")} onClick=${toggleTheme}><${Icon} n=${theme === "dark" ? "sun" : "moon"} /></button>`;
   let body;
   if (!user) body = html`<${Login} onLogin=${login} tools=${tools} />`;
   else {
@@ -1746,7 +2002,7 @@ function App() {
       <aside class="side">
         <div class="brand"><div class="brand-mark">W</div><div><b>Wardly</b><small>${t("app_tag")}</small></div></div>
         <div class="nav-label">${t("role_" + user.role)}</div>
-        <nav class="nav">${NAV[user.role].map(([k, label, ic]) => { const b = navBadge(k, user); return html`<button key=${k} class=${active === k ? "on" : ""} onClick=${() => go(k)} aria-current=${active === k ? "page" : null}><${Icon} n=${ic} /><span class="lbl">${t(label)}</span>${b ? html`<span class="badge">${b}</span>` : null}</button>`; })}</nav>
+        <nav class="nav" ref=${navRef}>${navInd ? html`<span class="nav-ind" style=${{ transform: `translateY(${navInd.y}px)`, height: navInd.h + "px" }}></span>` : null}${NAV[user.role].map(([k, label, ic]) => { const b = navBadge(k, user); return html`<button key=${k} class=${active === k ? "on" : ""} onClick=${() => go(k)} aria-current=${active === k ? "page" : null}><${Icon} n=${ic} /><span class="lbl">${t(label)}</span>${b ? html`<span class="badge">${b}</span>` : null}</button>`; })}</nav>
         <div class="who"><div class="avatar">${initials(user.full_name)}</div><div style=${{ minWidth: 0 }}><div class="who-name ellipsis">${user.full_name}</div><div class="who-co ellipsis">${user.company_id ? coName(user.company_id) : "Wardly"}</div></div></div>
       </aside>
       <div class="main">
@@ -1760,16 +2016,19 @@ function App() {
           <span class="pill pill-neutral mono" title=${t("sim_clock")}><${Icon} n="clock" />${fTime(clock.now())}</span>
           ${tools}
           <${Bell} />
-          <button class="icon-btn" aria-label=${t("logout")} title=${t("logout")} onClick=${() => setUid(null)}><${Icon} n="logout" cls="flip" /></button>
+          <button class="icon-btn" aria-label=${t("logout")} title=${t("logout")} onClick=${logout}><${Icon} n="logout" cls="flip" /></button>
         </header>
         <main class="content" ref=${contentRef}>${page ? page() : null}</main>
+        ${navKey ? html`<div class="route-bar" key=${navKey}></div>` : null}
       </div>
     </div>`;
   }
   return html`<${Ctx.Provider} value=${ctx}>
-    ${body}
-    <${SimPanel} />
+    ${splash !== "show" ? body : null}
+    ${splash !== "show" ? html`<${SimPanel} />` : null}
     <div class="toasts" aria-live="polite">${toasts.map((x) => html`<${Toast} key=${x.tid} x=${x} onDone=${() => setToasts((ts) => ts.filter((y) => y.tid !== x.tid))} />`)}</div>
+    ${wipe ? html`<${Wipe} key=${wipe.k} x=${wipe.x} y=${wipe.y} />` : null}
+    ${splash !== "done" ? html`<${Splash} onReveal=${() => setSplash("reveal")} onDone=${() => setSplash("done")} />` : null}
   <//>`;
 }
 ReactDOM.createRoot(document.getElementById("root")).render(html`<${App} />`);
